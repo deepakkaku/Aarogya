@@ -66,7 +66,7 @@ export default function DrawerNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: !isPersistent,
         drawerType: isPersistent ? 'permanent' : 'front',
         overlayColor: isPersistent ? 'transparent' : undefined,
         drawerStyle: isPersistent ? styles.persistentDrawer : undefined,

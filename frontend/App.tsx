@@ -42,7 +42,13 @@ export default function App() {
   // Apply fontFamily globally via a custom theme and defaultTextStyle
   return (
     <NavigationContainer theme={navTheme}>
-      {isDesktop ? <DrawerNavigator /> : <TabNavigator />}
+      {isDesktop ? (
+        <View style={{ flex: 1 }}>
+          <DrawerNavigator />
+        </View>
+      ) : (
+        <TabNavigator />
+      )}
     </NavigationContainer>
   );
 }

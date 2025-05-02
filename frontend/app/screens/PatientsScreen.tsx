@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useResponsiveContainerStyle } from '../../ui/layout';
 
 export default function PatientsScreen() {
+  const containerStyle = useResponsiveContainerStyle();
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <Text>Patients Screen</Text>
     </View>
   );

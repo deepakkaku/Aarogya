@@ -1,18 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useResponsiveContainerStyle } from '../../ui/layout';
 
 export default function OPDScreen() {
+  const containerStyle = useResponsiveContainerStyle();
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <Text>OPD Screen</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-}); 
+// (Optional) Remove unused styles if not needed 

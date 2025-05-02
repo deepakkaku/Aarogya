@@ -1,4 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { colors } from './colors';
+
+// Sidebar width for persistent drawer
+export const SIDEBAR_WIDTH = 260;
 
 // Common layout styles for containers and centralized content
 export const layout = StyleSheet.create({
@@ -15,4 +19,20 @@ export const layout = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-// Usage: import { layout } from '../ui/layout' 
+
+// Responsive container style hook for main content
+export function useResponsiveContainerStyle() {
+  const { width } = useWindowDimensions();
+  const isDesktop = Platform.OS === 'web' || width > 768;
+  return [
+    {
+      flex: 1,
+      marginTop: isDesktop ? 24 : 0,
+      marginRight: isDesktop ? 24 : 0,
+      marginBottom: isDesktop ? 24 : 0,
+      marginLeft: isDesktop ? SIDEBAR_WIDTH + 24 : 0,
+      backgroundColor: colors.background,
+    },
+  ];
+}
+// Usage: const containerStyle = useResponsiveContainerStyle(); 
