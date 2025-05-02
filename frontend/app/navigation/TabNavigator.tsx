@@ -5,6 +5,7 @@ import OPDScreen from '../screens/OPDScreen';
 import PatientsScreen from '../screens/PatientsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,11 +14,18 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
+          if (route.name === 'Profile') {
+            return (
+              <Image
+                source={require('../../assets/images/avatar.png')}
+                style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: '#fff' }}
+              />
+            );
+          }
           let iconName = '';
           if (route.name === 'Home') iconName = 'home-outline';
           else if (route.name === 'OPD') iconName = 'medkit-outline';
           else if (route.name === 'Patients') iconName = 'people-outline';
-          else if (route.name === 'Profile') iconName = 'person-outline';
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
