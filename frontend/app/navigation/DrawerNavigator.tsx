@@ -66,18 +66,26 @@ function PersistentDrawerContent({ navigation, state }: any) {
       <View style={styles.sectionBottom}>
         {drawerItemsBottom.map(item => {
           const isActive = state?.routeNames[state.index] === item.screen;
+          const isProfile = item.screen === 'Profile';
           return (
             <Pressable
               key={item.label}
               style={[styles.drawerItem, isActive && styles.activeDrawerItem]}
               onPress={() => navigation.navigate(item.screen)}
             >
-              <Ionicons
-                name={item.icon}
-                size={22}
-                color={isActive ? '#fff' : 'rgba(255,255,255,0.7)'}
-                style={styles.icon}
-              />
+              {isProfile ? (
+                <Image
+                  source={require('../../assets/images/avatar.png')}
+                  style={styles.avatar}
+                />
+              ) : (
+                <Ionicons
+                  name={item.icon}
+                  size={22}
+                  color={isActive ? '#fff' : 'rgba(255,255,255,0.7)'}
+                  style={styles.icon}
+                />
+              )}
               <Text
                 style={[
                   styles.drawerLabel,
@@ -141,22 +149,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 12,
     paddingBottom: 12,
-    paddingLeft: 8,
+    paddingLeft: 12,
     paddingRight: 12,
     backgroundColor: 'transparent',
   },
   logoContainer: {
     padding: 0,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     height: 80,
     marginBottom: 8,
   },
   logoImage: {
     width: '100%',
-    height: 45,
-    marginBottom: 8,
-    alignSelf: 'center',
+    height: 40,
+    marginBottom: 8
   },
   section: {
     marginTop: 16,
@@ -194,5 +201,12 @@ const styles = StyleSheet.create({
   activeDrawerLabel: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    marginRight: 16,
+    backgroundColor: '#fff',
   },
 }); 
