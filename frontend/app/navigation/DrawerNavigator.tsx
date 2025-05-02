@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, Pressable, useWindowDimensions, Platform, Image } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import OPDScreen from '../screens/OPDScreen';
 import PatientsScreen from '../screens/PatientsScreen';
@@ -8,6 +8,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import LogoutScreen from '../screens/LogoutScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { colors } from '../../ui/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,33 +28,67 @@ function PersistentDrawerContent({ navigation, state }: any) {
   const isPersistent = Platform.OS === 'web' || width > 768;
 
   return (
-    <View style={[styles.drawer, isPersistent && styles.persistentDrawer]}>
+    <View style={styles.drawerContent}>
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>AarogyaDesk</Text>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logoImage}
+          resizeMode="contain"
+        />
       </View>
       <View style={styles.section}>
-        {drawerItemsTop.map(item => (
-          <Pressable
-            key={item.label}
-            style={[styles.drawerItem, state?.routeNames[state.index] === item.screen && styles.activeDrawerItem]}
-            onPress={() => navigation.navigate(item.screen)}
-          >
-            <Ionicons name={item.icon} size={22} color={state?.routeNames[state.index] === item.screen ? '#2a7be4' : '#555'} style={styles.icon} />
-            <Text style={[styles.drawerLabel, state?.routeNames[state.index] === item.screen && styles.activeDrawerLabel]}>{item.label}</Text>
-          </Pressable>
-        ))}
+        {drawerItemsTop.map(item => {
+          const isActive = state?.routeNames[state.index] === item.screen;
+          return (
+            <Pressable
+              key={item.label}
+              style={[styles.drawerItem, isActive && styles.activeDrawerItem]}
+              onPress={() => navigation.navigate(item.screen)}
+            >
+              <Ionicons
+                name={item.icon}
+                size={22}
+                color={isActive ? '#fff' : 'rgba(255,255,255,0.7)'}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.drawerLabel,
+                  isActive && styles.activeDrawerLabel,
+                ]}
+              >
+                {item.label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
       <View style={styles.sectionBottom}>
-        {drawerItemsBottom.map(item => (
-          <Pressable
-            key={item.label}
-            style={styles.drawerItem}
-            onPress={() => navigation.navigate(item.screen)}
-          >
-            <Ionicons name={item.icon} size={22} color="#555" style={styles.icon} />
-            <Text style={styles.drawerLabel}>{item.label}</Text>
-          </Pressable>
-        ))}
+        {drawerItemsBottom.map(item => {
+          const isActive = state?.routeNames[state.index] === item.screen;
+          return (
+            <Pressable
+              key={item.label}
+              style={[styles.drawerItem, isActive && styles.activeDrawerItem]}
+              onPress={() => navigation.navigate(item.screen)}
+            >
+              <Ionicons
+                name={item.icon}
+                size={22}
+                color={isActive ? '#fff' : 'rgba(255,255,255,0.7)'}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.drawerLabel,
+                  isActive && styles.activeDrawerLabel,
+                ]}
+              >
+                {item.label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
     </View>
   );
@@ -90,56 +125,74 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   persistentDrawer: {
-    width: 260,
+    width: 230,
+    borderRadius: 24,
+    top: 12,
+    left: 12,
+    bottom: 12,
     borderRightWidth: 1,
     borderRightColor: '#eee',
     position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
     zIndex: 100,
     elevation: 4,
+    backgroundColor: colors.primary,
+  },
+  drawerContent: {
+    flex: 1,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 8,
+    paddingRight: 12,
+    backgroundColor: 'transparent',
   },
   logoContainer: {
-    padding: 32,
+    padding: 0,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    justifyContent: 'center',
+    height: 80,
+    marginBottom: 8,
   },
-  logoText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#2a7be4',
+  logoImage: {
+    width: '100%',
+    height: 45,
+    marginBottom: 8,
+    alignSelf: 'center',
   },
   section: {
-    marginTop: 32,
+    marginTop: 16,
+  },
+  sectionDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    marginVertical: 24,
+    marginRight: 8,
   },
   sectionBottom: {
     marginTop: 'auto',
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingBottom: 24,
-    paddingTop: 16,
+    
   },
   drawerItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 28,
+    paddingLeft: 12,
+    paddingRight: 18,
+    borderRadius: 8,
   },
   activeDrawerItem: {
-    backgroundColor: '#eaf2fb',
-    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 12
   },
   icon: {
     marginRight: 16,
   },
   drawerLabel: {
     fontSize: 16,
-    color: '#555',
+    color: 'rgba(255,255,255,0.85)',
+    fontWeight: '400',
   },
   activeDrawerLabel: {
-    color: '#2a7be4',
+    color: '#fff',
     fontWeight: 'bold',
   },
 }); 
