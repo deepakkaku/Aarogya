@@ -1,15 +1,18 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import OPDScreen from '../screens/OPDScreen';
-import PatientsScreen from '../screens/PatientsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import HomeScreen from '../app/screens/HomeScreen';
+import OPDScreen from '../app/screens/OPDScreen';
+import PatientsScreen from '../app/screens/PatientsScreen';
+import ProfileScreen from '../app/screens/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity, Platform } from 'react-native';
+import { useAuth } from '../lib/useAuth';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
+  const { logout } = useAuth();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -17,7 +20,7 @@ export default function TabNavigator() {
           if (route.name === 'Profile') {
             return (
               <Image
-                source={require('../../assets/images/avatar.png')}
+                source={require('../assets/images/avatar.png')}
                 style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: '#fff' }}
               />
             );
@@ -28,6 +31,11 @@ export default function TabNavigator() {
           else if (route.name === 'Patients') iconName = 'people-outline';
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        headerRight: () => (
+          <TouchableOpacity onPress={logout} style={{ marginRight: 15 }}>
+            <Ionicons name="log-out-outline" size={24} color="#555" />
+          </TouchableOpacity>
+        ),
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />

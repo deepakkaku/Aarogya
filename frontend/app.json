@@ -1,5 +1,13 @@
 {
-  "plugins": [
-    "expo-font"
-  ]
+  "expo": {
+    "name": "AarogyaDesk",
+    "slug": "aarogyadesk",
+    "version": "1.0.0",
+    "scheme": "aarogyadesk",
+    "jsEngine": "hermes",
+    "plugins": [
+      "expo-font",
+      "expo-linking"
+    ]
+  }
 }

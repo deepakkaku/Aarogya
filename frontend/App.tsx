@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, useWindowDimensions, ActivityIndicator, View } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import TabNavigator from "./app/navigation/TabNavigator";
-import DrawerNavigator from "./app/navigation/DrawerNavigator";
+import TabNavigator from "./navigation/TabNavigator";
+import DrawerNavigator from "./navigation/DrawerNavigator";
+import LoginScreen from "./app/screens/LoginScreen";
 import { useFonts } from "expo-font";
 import { fonts } from "./ui/fonts";
 import { colors } from "./ui/colors";
+import { supabase } from "./lib/supabase";
 
 // Custom navigation theme to apply the font and background color globally
 const navTheme = {
@@ -31,7 +33,24 @@ export default function App() {
     "SourceSans3-Bold": require("./assets/fonts/SourceSans3-Bold.ttf"),
   });
 
-  if (!loaded) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  // Step 2: Check session on mount
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  if (!loaded || isAuthenticated === null) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background }}>
         <ActivityIndicator size="large" color={colors.primary} />
@@ -42,12 +61,14 @@ export default function App() {
   // Apply fontFamily globally via a custom theme and defaultTextStyle
   return (
     <NavigationContainer theme={navTheme}>
-      {isDesktop ? (
-        <View style={{ flex: 1 }}>
+      {isAuthenticated ? (
+        isDesktop ? (
           <DrawerNavigator />
-        </View>
+        ) : (
+          <TabNavigator />
+        )
       ) : (
-        <TabNavigator />
+        <LoginScreen />
       )}
     </NavigationContainer>
   );

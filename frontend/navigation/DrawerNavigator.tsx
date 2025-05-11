@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, useWindowDimensions, Platform, Image } from 'react-native';
-import HomeScreen from '../screens/HomeScreen';
-import OPDScreen from '../screens/OPDScreen';
-import PatientsScreen from '../screens/PatientsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import LogoutScreen from '../screens/LogoutScreen';
+import HomeScreen from '../app/screens/HomeScreen';
+import OPDScreen from '../app/screens/OPDScreen';
+import PatientsScreen from '../app/screens/PatientsScreen';
+import ProfileScreen from '../app/screens/ProfileScreen';
+import SettingsScreen from '../app/screens/SettingsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { colors } from '../../ui/colors';
+import { colors } from '../ui/colors';
+import { useAuth } from '../lib/useAuth';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,19 +26,22 @@ const drawerItemsBottom = [
 function PersistentDrawerContent({ navigation, state }: any) {
   const { width } = useWindowDimensions();
   const isPersistent = Platform.OS === 'web' || width > 768;
+  const { logout } = useAuth();
 
   return (
     <View style={styles.drawerContent}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/images/logo.png')}
+          source={require('../assets/images/logo.png')}
           style={styles.logoImage}
           resizeMode="contain"
         />
       </View>
       <View style={styles.section}>
         {drawerItemsTop.map(item => {
-          const isActive = state?.routeNames[state.index] === item.screen;
+          const isLogout = item.screen === 'Logout';
+          const isActive = !isLogout && state?.routeNames[state.index] === item.screen;
+          
           return (
             <Pressable
               key={item.label}
@@ -71,11 +74,15 @@ function PersistentDrawerContent({ navigation, state }: any) {
             <Pressable
               key={item.label}
               style={[styles.drawerItem, isActive && styles.activeDrawerItem]}
-              onPress={() => navigation.navigate(item.screen)}
+              onPress={
+                item.screen === 'Logout' 
+                  ? logout
+                  : () => navigation.navigate(item.screen)
+              }
             >
               {isProfile ? (
                 <Image
-                  source={require('../../assets/images/avatar.png')}
+                  source={require('../assets/images/avatar.png')}
                   style={styles.avatar}
                 />
               ) : (
@@ -121,7 +128,6 @@ export default function DrawerNavigator() {
       <Drawer.Screen name="Patients" component={PatientsScreen} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
   );
 }
